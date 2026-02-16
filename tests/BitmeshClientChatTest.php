@@ -50,10 +50,10 @@ class BitmeshClientChatTest extends BitmeshClientTestCase
         // Assert request URL
         $this->assertSame('https://api.bitmesh.ai/chat', $client->captured['url']);
 
-        // Assert JSON body structure
+        // Assert JSON body structure (model omitted when null per API: prohibited if key has fixed model)
         $decodedBody = json_decode($client->captured['jsonBody'], true);
         $this->assertIsArray($decodedBody);
-        $this->assertArrayHasKey('model', $decodedBody);
+        $this->assertArrayNotHasKey('model', $decodedBody);
         $this->assertArrayHasKey('messages', $decodedBody);
         $this->assertSame($message, $decodedBody['messages'][0]['content']);
 
