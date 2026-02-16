@@ -1,18 +1,18 @@
 <?php
 
-namespace AiProxy\Tests;
+namespace BitmeshAI\Tests;
 
-use AiProxy\Client;
+use BitmeshAI\BitmeshClient;
 use PHPUnit\Framework\TestCase;
 
-class ClientChatTest extends TestCase
+class BitmeshClientChatTest extends TestCase
 {
     public function testChatBuildsPayloadAndSignature()
     {
-        $consumerKey = 'test-consumer-key';
-        $consumerSecret = 'test-consumer-secret';
+        $consumerKey = 'KO45tkb7vs6HPdjZMkzWCgpKqGrycRol';
+        $consumerSecret = '5UJOAvIkpwmztsTDIl1tYPT7nOlSixYR';
 
-        $client = new class($consumerKey, $consumerSecret, 'https://example.com') extends Client {
+        $client = new class($consumerKey, $consumerSecret, 'https://api.bitmesh.ai') extends BitmeshClient {
             public array $captured = [];
 
             protected function sendRequest(
@@ -49,7 +49,7 @@ class ClientChatTest extends TestCase
         $this->assertSame('assistant', $response['choices'][0]['message']['role']);
 
         // Assert request URL
-        $this->assertSame('https://example.com/chat', $client->captured['url']);
+        $this->assertSame('https://api.bitmesh.ai/chat', $client->captured['url']);
 
         // Assert JSON body structure
         $decodedBody = json_decode($client->captured['jsonBody'], true);
@@ -64,7 +64,8 @@ class ClientChatTest extends TestCase
         $this->assertStringContainsString('oauth_consumer_key="' . rawurlencode($consumerKey) . '"', $authHeader);
 
         // Extract oauth_signature from header to verify payload signature formula
-        $this->assertMatchesRegularExpression('/oauth_signature="([^"]+)"/', $authHeader, $matches);
+        $this->assertMatchesRegularExpression('/oauth_signature="([^"]+)"/', $authHeader);
+        preg_match('/oauth_signature="([^"]+)"/', $authHeader, $matches);
         $oauthSignature = rawurldecode($matches[1]);
 
         $expectedPayloadSignature = hash(
@@ -75,5 +76,3 @@ class ClientChatTest extends TestCase
         $this->assertSame($expectedPayloadSignature, $client->captured['payloadSignature']);
     }
 }
-
-

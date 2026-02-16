@@ -1,8 +1,8 @@
 <?php
 
-namespace AiProxy;
+namespace BitmeshAI;
 
-class Client
+class BitmeshClient
 {
     private string $consumerKey;
     private string $consumerSecret;
@@ -10,11 +10,11 @@ class Client
     private string $userAgent;
 
     /**
-     * Create a new AI Proxy client.
+     * Create a new Bitmesh AI client.
      *
-     * @param string $consumerKey    OAuth consumer key provided by AI Proxy
-     * @param string $consumerSecret OAuth consumer secret provided by AI Proxy
-     * @param string $apiBaseUrl     Base URL of the AI Proxy API (change this if you use a local/dev server)
+     * @param string $consumerKey    OAuth consumer key provided by Bitmesh
+     * @param string $consumerSecret OAuth consumer secret provided by Bitmesh
+     * @param string $apiBaseUrl     Base URL of the Bitmesh AI API (change this if you use a local/dev server)
      *                               Defaults to the production URL.
      * @param string $userAgent      Optional User-Agent header value
      */
@@ -22,7 +22,7 @@ class Client
         string $consumerKey,
         string $consumerSecret,
         string $apiBaseUrl = 'https://aiproxyapi-production.up.railway.app',
-        string $userAgent = 'AiProxyPhpSdk/1.0'
+        string $userAgent = 'BitmeshPhpSdk/1.0'
     ) {
         $this->consumerKey = $consumerKey;
         $this->consumerSecret = $consumerSecret;
@@ -35,7 +35,7 @@ class Client
      *
      * Minimal usage:
      *
-     * $client = new Client($consumerKey, $consumerSecret);
+     * $client = new BitmeshClient($consumerKey, $consumerSecret);
      * $response = $client->chat('What are some fun things to do with AI?');
      *
      * @param string|array<int, array{role:string,content:string}> $messages
@@ -90,12 +90,12 @@ class Client
 
         if ($decoded === null && json_last_error() !== JSON_ERROR_NONE) {
             throw new \RuntimeException(
-                'Failed to decode AI Proxy response JSON: ' . json_last_error_msg() . '. Raw body: ' . $body
+                'Failed to decode Bitmesh response JSON: ' . json_last_error_msg() . '. Raw body: ' . $body
             );
         }
 
         if ($httpCode !== 200) {
-            $message = 'AI Proxy API returned HTTP ' . $httpCode;
+            $message = 'Bitmesh API returned HTTP ' . $httpCode;
             if (is_array($decoded) && isset($decoded['error'])) {
                 $message .= ' - ' . json_encode($decoded['error']);
             }
@@ -106,7 +106,7 @@ class Client
     }
 
     /**
-     * Send HTTP request to AI Proxy.
+     * Send HTTP request to Bitmesh AI.
      *
      * @param string $url
      * @param string $authHeader
@@ -143,7 +143,7 @@ class Client
         if ($body === false) {
             $error = curl_error($ch);
             curl_close($ch);
-            throw new \RuntimeException('Curl error while calling AI Proxy: ' . $error);
+            throw new \RuntimeException('Curl error while calling Bitmesh: ' . $error);
         }
 
         $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -249,4 +249,3 @@ class Client
         );
     }
 }
-

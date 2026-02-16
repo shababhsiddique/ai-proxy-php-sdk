@@ -1,13 +1,13 @@
-## AI Proxy PHP SDK
+## Bitmesh PHP SDK
 
-PHP SDK for calling the AI Proxy `/chat` API using OAuth 1.0 authentication.
+PHP SDK for calling the Bitmesh AI `/chat` API using OAuth 1.0 authentication.
 
 ### Installation
 
 Install via Composer:
 
 ```bash
-composer require ai-proxy/php-sdk
+composer require bitmeshai/bitmesh-php-sdk
 ```
 
 Or, if you are developing locally in this repo:
@@ -23,13 +23,13 @@ composer install
 
 require 'vendor/autoload.php';
 
-use AiProxy\Client;
+use BitmeshAI\BitmeshClient;
 
 $consumerKey = 'YOUR_CONSUMER_KEY';
 $consumerSecret = 'YOUR_CONSUMER_SECRET';
 
 // Production client (default base URL)
-$client = new Client($consumerKey, $consumerSecret);
+$client = new BitmeshClient($consumerKey, $consumerSecret);
 
 // Simple one-shot chat with a string prompt
 $response = $client->chat('What are some fun things to do with AI?');
@@ -39,10 +39,10 @@ print_r($response);
 
 ### Using a Local / Dev Server
 
-If you are running the AI Proxy API locally (for example at `http://localhost:8003`), pass the base URL explicitly:
+If you are running the Bitmesh AI API locally (for example at `http://localhost:8003`), pass the base URL explicitly:
 
 ```php
-$client = new Client(
+$client = new BitmeshClient(
     $consumerKey,
     $consumerSecret,
     'http://localhost:8003'
@@ -106,7 +106,7 @@ public function chat(
 
 ### Testing
 
-This repo includes a basic PHPUnit test for the `Client::chat()` method.
+This repo includes a basic PHPUnit test for the `BitmeshClient::chat()` method.
 
 Run all tests:
 
@@ -117,7 +117,7 @@ Run all tests:
 Or run a single test file:
 
 ```bash
-./vendor/bin/phpunit tests/ClientChatTest.php
+./vendor/bin/phpunit tests/BitmeshClientChatTest.php
 ```
 
 

@@ -1,17 +1,9 @@
 {
-    "name": "shababhsiddique/ai-proxy-php-sdk",
-    "description": "AI Proxy PHP SDK for AI Proxy API",
+    "name": "bitmeshai/bitmesh-php-sdk",
+    "description": "Bitmesh PHP SDK for the Bitmesh AI API",
     "type": "library",
     "license": "MIT",
-    "keywords": [
-        "ai-proxy",
-        "ai",
-        "api",
-        "sdk",
-        "oauth",
-        "chat",
-        "llm"
-    ],
+    "keywords": ["bitmesh", "bitmesh-ai", "ai", "api", "sdk", "oauth", "chat", "llm"],
     "authors": [
         {
             "name": "Shabab Haider Siddique",
@@ -26,15 +18,17 @@
     },
     "autoload": {
         "psr-4": {
-            "AiProxy\\": "src/"
+            "BitmeshAI\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AiProxy\\Tests\\": "tests/"
+            "BitmeshAI\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "support": {
+        "source": "https://github.com/bitmeshai/bitmesh-php-sdk"
+    }
 }
-

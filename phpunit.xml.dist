@@ -6,7 +6,7 @@
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
 >
     <testsuites>
-        <testsuite name="AI Proxy PHP SDK Test Suite">
+        <testsuite name="Bitmesh PHP SDK Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
