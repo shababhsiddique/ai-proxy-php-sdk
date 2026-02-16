@@ -280,7 +280,10 @@ class BitmeshClient
         $oauthParams = $this->generateOAuthParams($method, $url);
         $authHeader = $this->buildAuthorizationHeader($oauthParams);
 
-        [$httpCode, $body] = $this->sendGetRequest($url, $authHeader);
+        // Payload signature for GET: empty body, same formula as POST
+        $payloadSignature = hash('sha256', '' . $this->consumerKey . $oauthParams['oauth_signature']);
+
+        [$httpCode, $body] = $this->sendGetRequest($url, $authHeader, $payloadSignature);
 
         $decoded = json_decode($body, true);
 
@@ -353,12 +356,13 @@ class BitmeshClient
      *
      * @param string $url
      * @param string $authHeader
+     * @param string $payloadSignature Payload signature (e.g. for GET, hash of empty body + key + oauth_signature).
      *
      * @return array{0:int,1:string} [HTTP status code, response body]
      *
      * @throws \RuntimeException on transport errors
      */
-    protected function sendGetRequest(string $url, string $authHeader): array
+    protected function sendGetRequest(string $url, string $authHeader, string $payloadSignature): array
     {
         $ch = curl_init();
         curl_setopt_array($ch, [
@@ -368,6 +372,7 @@ class BitmeshClient
                 'Authorization: ' . $authHeader,
                 'Accept: application/json',
                 'User-Agent: ' . $this->userAgent,
+                'X-Payload-Signature: ' . $payloadSignature,
             ],
             CURLOPT_HEADER => false,
             CURLOPT_HTTPGET => true,

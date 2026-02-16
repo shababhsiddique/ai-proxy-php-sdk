@@ -129,11 +129,12 @@ class BitmeshClientVideoTest extends BitmeshClientTestCase
         $client = new class($consumerKey, $consumerSecret, 'https://api.bitmesh.ai') extends BitmeshClient {
             public array $captured = [];
 
-            protected function sendGetRequest(string $url, string $authHeader): array
+            protected function sendGetRequest(string $url, string $authHeader, string $payloadSignature): array
             {
                 $this->captured = [
                     'url' => $url,
                     'authHeader' => $authHeader,
+                    'payloadSignature' => $payloadSignature,
                 ];
 
                 return [
@@ -160,6 +161,8 @@ class BitmeshClientVideoTest extends BitmeshClientTestCase
 
         $this->assertSame('https://api.bitmesh.ai/video/video-job-789', $client->captured['url']);
         $this->assertStringStartsWith('OAuth ', $client->captured['authHeader']);
+        $this->assertNotEmpty($client->captured['payloadSignature']);
+        $this->assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $client->captured['payloadSignature']);
     }
 
     public function testVideoStatusEncodesJobIdInUrl()
@@ -170,7 +173,7 @@ class BitmeshClientVideoTest extends BitmeshClientTestCase
         $client = new class($consumerKey, $consumerSecret, 'https://api.bitmesh.ai') extends BitmeshClient {
             public array $captured = [];
 
-            protected function sendGetRequest(string $url, string $authHeader): array
+            protected function sendGetRequest(string $url, string $authHeader, string $payloadSignature): array
             {
                 $this->captured = ['url' => $url];
                 return [200, json_encode(['id' => 'job/with/slashes', 'status' => 'running'])];
