@@ -1,6 +1,6 @@
 ## Bitmesh PHP SDK
 
-PHP SDK for calling the Bitmesh AI API (chat, image, video) using OAuth 1.0 authentication. Browse [all available models](https://bitmesh.ai/models) on Bitmesh.
+PHP SDK for calling the Bitmesh AI API (chat, image, video) built in authentication. Browse [all available models](https://bitmesh.ai/models) on Bitmesh.ai.
 
 ### Installation
 
