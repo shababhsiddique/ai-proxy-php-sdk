@@ -108,6 +108,8 @@ public function chat(
 
 This repo includes a basic PHPUnit test for the `BitmeshClient::chat()` method.
 
+Tests use mock requests. Credentials are configured in `phpunit.xml.dist` via `BITMESH_TEST_CONSUMER_KEY` and `BITMESH_TEST_CONSUMER_SECRET`. Copy to `phpunit.xml` and customize if needed.
+
 Run all tests:
 
 ```bash

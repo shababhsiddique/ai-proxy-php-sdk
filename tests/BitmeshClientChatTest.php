@@ -3,14 +3,13 @@
 namespace BitmeshAI\Tests;
 
 use BitmeshAI\BitmeshClient;
-use PHPUnit\Framework\TestCase;
 
-class BitmeshClientChatTest extends TestCase
+class BitmeshClientChatTest extends BitmeshClientTestCase
 {
     public function testChatBuildsPayloadAndSignature()
     {
-        $consumerKey = 'KO45tkb7vs6HPdjZMkzWCgpKqGrycRol';
-        $consumerSecret = '5UJOAvIkpwmztsTDIl1tYPT7nOlSixYR';
+        $consumerKey = $this->getConsumerKey();
+        $consumerSecret = $this->getConsumerSecret();
 
         $client = new class($consumerKey, $consumerSecret, 'https://api.bitmesh.ai') extends BitmeshClient {
             public array $captured = [];
@@ -74,5 +73,48 @@ class BitmeshClientChatTest extends TestCase
         );
 
         $this->assertSame($expectedPayloadSignature, $client->captured['payloadSignature']);
+    }
+
+    public function testChatWithMaxTokensAndModel()
+    {
+        $consumerKey = $this->getConsumerKey();
+        $consumerSecret = $this->getConsumerSecret();
+
+        $client = new class($consumerKey, $consumerSecret, 'https://api.bitmesh.ai') extends BitmeshClient {
+            public array $captured = [];
+
+            protected function sendRequest(
+                string $url,
+                string $authHeader,
+                string $payloadSignature,
+                string $jsonBody
+            ): array {
+                $this->captured = [
+                    'url' => $url,
+                    'jsonBody' => $jsonBody,
+                ];
+
+                return [
+                    200,
+                    json_encode([
+                        'choices' => [
+                            ['message' => ['role' => 'assistant', 'content' => 'Hi']],
+                        ],
+                    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+                ];
+            }
+        };
+
+        $model = 'google/gemma-3n-1b';
+        $message = 'Hi';
+
+        $response = $client->chat($message, $model, ['max_tokens' => 1]);
+
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('choices', $response);
+
+        $decodedBody = json_decode($client->captured['jsonBody'], true);
+        $this->assertSame($model, $decodedBody['model']);
+        $this->assertSame(1, $decodedBody['max_tokens']);
     }
 }
